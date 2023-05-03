@@ -2,6 +2,9 @@
 
 DP group recommendation algorithm for MIT 6.5610:
 
+Before running any tests, run the following command in Terminal:
+`export PYTHONPATH=abs/path/to/hidden-rhythms/`
+
 ## Algorithm
 
 Given a group and vectorized samples of each member's preffered song, this algorithm will output a list of songs that take into account everyone's preferences while not revealing any individual user's preferences. Check out [this article on DP](https://google.com) for more information.

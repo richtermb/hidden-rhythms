@@ -2,7 +2,6 @@ import faiss
 
 class FAISSWrapper(object):
   def __init__(self, dims):
-    print("Initialized FAISS wrapper")
     self.index = faiss.IndexFlatL2(dims)
 
   def add(self, v):

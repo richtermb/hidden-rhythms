@@ -1,29 +1,39 @@
 import numpy as np
+import os
 
-from hidden_rhythms import recommender
+from hidden_rhythms import recommender, dataset
 
 if __name__ == "__main__":
   # dims = 10
-  n_friends = 1
+  group_total = 5
   songs_per_friend = 10
-  recommender = recommender.Recommender(n_friends, songs_per_friend)
 
-  friend_song_vecs = np.array([
-    [0.645, 0.445, 0.0, -13.338, 0.451, 0.674, 0.744, 0.151, 0.127, 104.851],
-    [0.695, 0.263, 0.0, -22.136, 0.957, 0.797, 0.0, 0.148, 0.655, 102.009],
-    [4.34e-01, 1.77e-01, 1.0, -2.118e+01, 5.12e-02, 9.94e-01, 2.18e-02, 2.12e-01, 4.57e-01, 1.30418e+02],
-    [3.21e-01, 9.46e-02, 7.0, -2.7961e+01, 5.04e-02, 9.95e-01, 9.18e-01, 1.04e-01, 3.97e-01, 1.6998e+02],
-    [4.02e-01, 1.58e-01, 3.0, -1.69e+01, 3.9e-02, 9.89e-01, 1.3e-01, 3.11e-01, 1.96e-01, 1.0322e+02],
-    [2.27e-01, 2.61e-01, 5.0, -1.2343e+01, 3.82e-02, 9.94e-01, 2.47e-01, 9.77e-02, 5.39e-02, 1.18891e+02],
-    [0.51, 0.355, 4.0, -12.833, 0.124, 0.965, 0.0, 0.155, 0.727, 85.754],
-    [5.63e-01, 1.84e-01, 4.0, -1.3757e+01, 5.12e-02, 9.93e-01, 1.55e-05, 3.25e-01, 6.54e-01, 1.33088e+02],
-    [4.88e-01, 4.75e-01, 0.0, -1.6222e+01, 3.99e-02, 6.2e-01, 6.45e-03, 1.07e-01, 5.44e-01, 1.39952e+02],
-    [5.48e-01, 3.91e-02, 6.0, -2.3228e+01, 1.53e-01, 9.96e-01, 9.33e-01, 1.48e-01, 6.12e-01, 7.5595e+01],
-  ])
+  print("Initializing recommender...")
+  recommender = recommender.Recommender(group_total, songs_per_friend)
 
-  print("Adding vectors to index...")
+  print("Loading dataset...")
+  dirname = os.path.dirname(__file__)
+  zip_path = os.path.join(dirname, "../hidden_rhythms/tracks.csv.zip")
+  df = dataset.load_tracks_dataset(zip_path)
+  recommender.load_song_db(df)
 
-  recommender.add(friend_song_vecs)
+  print("Adding member preferences...")
+  for i in range(group_total):
+    friend_songs = dataset.choose_random_songs(df, songs_per_friend)
+    print("Adding friend", i, friend_songs)
+    friend_index = recommender.add([dataset.vectorize(row) for _, row in friend_songs.iterrows()])
 
-  # faiss_wrapper.set_nprobe(10)
+  print("Generating shared playlist...")
+
+  group_means = recommender.compute_group_means()
+  print("Group means:", group_means)
+  
+  group_variances = recommender.compute_group_variances()
+  print("Group variances:", group_variances)
+
+  sensitivities = recommender.global_variance_sensitivities()
+  print("Sensitivities:", sensitivities)
+
+  # print("Means", recommender.compute_means())
+
   

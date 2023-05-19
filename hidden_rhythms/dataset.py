@@ -16,7 +16,7 @@ def load_tracks_dataset(zipped_tracks_csv_path):
   return df
 
 def vectorize(pd_row):
-  return np.array([
+  return np.array([[
     pd_row.danceability,
     pd_row.energy,
     pd_row.key,
@@ -27,4 +27,7 @@ def vectorize(pd_row):
     pd_row.liveness,
     pd_row.valence,
     pd_row.tempo
-  ])
+  ]])
+
+def choose_random_songs(df, n):
+  return df.sample(n)

@@ -11,12 +11,12 @@ class Recommender(object):
     self.songs = []
     self.song_db = FAISSWrapper(10) # initialize with 10 dimensions
     
-  def load_song_dataset(self, df):
+  def load_tracks_dataframe(self, df):
     for i, row in df.iterrows():
       v = vectorize(row)
       self.song_db.add(v)
   
-  def knn_song_dataset(self, v, n):
+  def knn_track_dataset(self, v, n):
     return self.song_db.search(v, n)
   
   def add_preference_matrix(self, song_prefs):

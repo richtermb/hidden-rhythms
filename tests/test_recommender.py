@@ -15,7 +15,7 @@ if __name__ == "__main__":
   dirname = os.path.dirname(__file__)
   zip_path = os.path.join(dirname, "../hidden_rhythms/tracks.csv.zip")
   df = dataset.load_tracks_dataset(zip_path)
-  recommender.load_song_db(df)
+  recommender.load_tracks_dataframe(df)
 
   print("Adding member preferences...")
   for i in range(group_total):
@@ -25,14 +25,14 @@ if __name__ == "__main__":
 
   print("Generating shared playlist...")
 
-  group_means = recommender.compute_group_means()
+  group_means = recommender.compute_group_mean_vec()
   print("Group means:", group_means)
-  
-  group_variances = recommender.compute_group_variances()
+
+  group_variances = recommender.compute_group_variance_vec()
   print("Group variances:", group_variances)
 
-  sensitivities = recommender.global_variance_sensitivities()
-  print("Sensitivities:", sensitivities)
+  sensitivity = recommender.global_variance_sensitivity()
+  print("Sensitivities:", sensitivity)
 
   # print("Means", recommender.compute_means())
 
